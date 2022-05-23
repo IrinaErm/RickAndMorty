@@ -1,0 +1,8 @@
+<resources>
+    <string name="details_name">Name: </string>
+    <string name="details_gender">Gender: </string>
+    <string name="details_status">Status: </string>
+    <string name="details_species">Species: </string>
+    <string name="details_created">Created: </string>
+    <string name="details_character_image_description">Character\'s image</string>
+</resources>

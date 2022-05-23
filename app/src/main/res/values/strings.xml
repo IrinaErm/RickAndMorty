@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RaM Guide</string>
+    <string name="character_list">Character List</string>
+
+    <string name="search">Search</string>
+    <string name="search_hint">Type in character\'s name</string>
+</resources>

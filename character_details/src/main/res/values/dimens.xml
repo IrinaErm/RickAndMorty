@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="details_text_margin_bottom">12dp</dimen>
+    <dimen name="details_text_margin_start">15dp</dimen>
+    <dimen name="details_text_margin_end">15dp</dimen>
+    <dimen name="details_text_size">13sp</dimen>
+    <dimen name="details_img_height">200dp</dimen>
+    <dimen name="details_cardview_elevation">10dp</dimen>
+    <dimen name="details_cardview_corner_radius">20dp</dimen>
+</resources>

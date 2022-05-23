@@ -1,0 +1,4 @@
+<resources>
+    <string name="search">Search</string>
+    <string name="search_hint">Type in character\'s name</string>
+</resources>
