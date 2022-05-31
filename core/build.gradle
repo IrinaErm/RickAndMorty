@@ -37,6 +37,7 @@ dependencies {
     def dagger_version = "2.40"
     def glide_version = "4.13.1"
     def lifecycle_viewmodel_version = "2.4.1"
+    def navigation_version = "2.4.2"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -68,4 +69,7 @@ dependencies {
     // ViewModel
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel_version"
 
+    // Navigation
+    api "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    api "androidx.navigation:navigation-ui-ktx:$navigation_version"
 }

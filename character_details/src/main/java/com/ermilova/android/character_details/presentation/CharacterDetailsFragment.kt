@@ -1,17 +1,19 @@
-package com.ermilova.android.ramguide
+package com.ermilova.android.character_details.presentation
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.ermilova.android.character_details.CharacterDetailsViewModel
+import com.ermilova.android.character_details.R
 import com.ermilova.android.character_details.databinding.FragmentCharacterDetailsBinding
+import com.ermilova.android.character_details.di.CharacterDetailsComponentProvider
 import com.ermilova.android.core.utils.ViewModelFactory
 import javax.inject.Inject
 
@@ -37,9 +39,6 @@ class CharacterDetailsFragment : Fragment() {
 
         characterDetailsViewModel.getCharacter(args.characterId)
 
-        val toolbar = requireActivity().findViewById<View>(R.id.toolbar) as Toolbar
-        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-
         characterDetailsViewModel.character.observe(viewLifecycleOwner) { character ->
             binding.img.let { imageView ->
                 Glide.with(imageView.context)
@@ -57,16 +56,15 @@ class CharacterDetailsFragment : Fragment() {
             binding.statusText.append(" ${character.status}")
             binding.createdText.append(" ${character.created}")
 
-            (this.activity as MainActivity).supportActionBar?.title = character.name
+            (this.activity as AppCompatActivity).supportActionBar?.title = character.name
         }
-
-        (activity as MainActivity).showUpButton()
 
         return binding.root
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireNotNull(activity).application as MyApplication).appComponent.inject(this)
+        (requireNotNull(activity).applicationContext as CharacterDetailsComponentProvider).provideCharacterDetailsComponent()
+            .inject(this)
     }
 }

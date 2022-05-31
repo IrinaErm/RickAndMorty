@@ -1,9 +1,10 @@
-package com.ermilova.android.character_details
+package com.ermilova.android.character_details.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ermilova.android.character_details.domain.GetCharacterUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.ermilova.android.core.Character

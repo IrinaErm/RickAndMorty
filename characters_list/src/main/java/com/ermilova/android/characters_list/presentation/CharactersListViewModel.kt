@@ -1,6 +1,7 @@
-package com.ermilova.android.characters_list
+package com.ermilova.android.characters_list.presentation
 
 import androidx.lifecycle.*
+import com.ermilova.android.characters_list.domain.GetAllCharactersUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

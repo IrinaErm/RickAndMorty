@@ -46,12 +46,4 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    fun showUpButton() {
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-    }
-
-    fun hideUpButton() {
-        supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-    }
 }

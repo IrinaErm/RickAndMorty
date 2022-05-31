@@ -1,18 +1,18 @@
-package com.ermilova.android.ramguide
+package com.ermilova.android.characters_list.presentation
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
-import androidx.navigation.findNavController
-import com.ermilova.android.characters_list.CharactersListAdapter
-import com.ermilova.android.characters_list.CharactersListViewModel
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.FragmentCharactersListBinding
+import com.ermilova.android.characters_list.di.CharactersListComponentProvider
 import com.ermilova.android.core.utils.ViewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,7 +37,6 @@ class CharactersListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (this.activity as MainActivity).supportActionBar?.setTitle(R.string.character_list)
         setHasOptionsMenu(true)
     }
 
@@ -60,30 +59,18 @@ class CharactersListFragment : Fragment() {
             }
         }
 
-        val toolbar = requireActivity().findViewById<View>(R.id.toolbar) as Toolbar
-        (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-
-
-        (activity as MainActivity).hideUpButton()
-
         return binding.root
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireNotNull(activity).application as MyApplication).appComponent.inject(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
+        (requireActivity().applicationContext as CharactersListComponentProvider).provideCharactersListComponent()
+            .inject(this)
     }
 
     private fun onListItemClick(position: Int) {
-        view?.findNavController()?.navigate(
-            CharactersListFragmentDirections.actionCharactersListFragmentToCharacterDetailsFragment(
-                charactersListAdapter.currentList[position].id
-            )
-        )
+        val uri = Uri.parse("App://characterDetailsFragment/${charactersListAdapter.currentList[position].id}")
+        findNavController(this).navigate(uri)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

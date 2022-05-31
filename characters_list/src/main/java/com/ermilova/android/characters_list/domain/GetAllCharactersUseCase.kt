@@ -1,4 +1,4 @@
-package com.ermilova.android.characters_list
+package com.ermilova.android.characters_list.domain
 
 import com.ermilova.android.core.Character
 import com.ermilova.android.core.CharacterRepo

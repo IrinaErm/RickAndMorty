@@ -1,4 +1,4 @@
-package com.ermilova.android.characters_list
+package com.ermilova.android.characters_list.presentation
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.ermilova.android.characters_list.R
 import com.ermilova.android.core.Character
 
 class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
