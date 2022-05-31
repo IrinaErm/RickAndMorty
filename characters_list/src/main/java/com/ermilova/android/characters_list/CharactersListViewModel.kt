@@ -11,6 +11,7 @@ import com.ermilova.android.core.Character
 class CharactersListViewModel @Inject constructor(
     private val getAllCharactersUseCase: GetAllCharactersUseCase
 ) : ViewModel() {
+
     private var _characters = MutableLiveData<List<Character>>()
     val characters: LiveData<List<Character>>
         get() = _characters

@@ -13,12 +13,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.ermilova.android.character_details.CharacterDetailsViewModel
 import com.ermilova.android.character_details.databinding.FragmentCharacterDetailsBinding
 import com.ermilova.android.core.utils.ViewModelFactory
+import javax.inject.Inject
 
 class CharacterDetailsFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<CharacterDetailsViewModel>
+
     private val characterDetailsViewModel: CharacterDetailsViewModel by viewModels {
-        ViewModelFactory {
-            (requireActivity().application as MyApplication).appComponent.characterDetailsViewModel()
-        }
+        viewModelFactory
     }
 
     private lateinit var binding: FragmentCharacterDetailsBinding

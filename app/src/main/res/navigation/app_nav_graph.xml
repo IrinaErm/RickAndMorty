@@ -8,17 +8,15 @@
     <fragment
         android:id="@+id/charactersListFragment"
         android:name="com.ermilova.android.ramguide.CharactersListFragment"
-        android:label="fragment_characters_list"
+        android:label="@string/character_list"
         tools:layout="@layout/fragment_characters_list">
         <action
             android:id="@+id/action_charactersListFragment_to_characterDetailsFragment"
-            app:destination="@id/characterDetailsFragment">
-        </action>
+            app:destination="@id/characterDetailsFragment"></action>
     </fragment>
     <fragment
         android:id="@+id/characterDetailsFragment"
-        android:name="com.ermilova.android.ramguide.CharacterDetailsFragment"
-        android:label="CharacterDetailsFragment">
+        android:name="com.ermilova.android.ramguide.CharacterDetailsFragment">
         <argument
             android:name="characterId"
             app:argType="long" />

@@ -17,13 +17,16 @@ import com.ermilova.android.core.utils.ViewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class CharactersListFragment : Fragment() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<CharactersListViewModel>
+
     private val charactersListViewModel: CharactersListViewModel by viewModels {
-        ViewModelFactory {
-            (requireNotNull(activity).application as MyApplication).appComponent.charactersListViewModel()
-        }
+        viewModelFactory
     }
 
     private lateinit var charactersListAdapter: CharactersListAdapter
@@ -34,6 +37,7 @@ class CharactersListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (this.activity as MainActivity).supportActionBar?.setTitle(R.string.character_list)
         setHasOptionsMenu(true)
     }
 
@@ -47,7 +51,7 @@ class CharactersListFragment : Fragment() {
         binding.charactersList.adapter = charactersListAdapter
 
         charactersListViewModel.characters.observe(viewLifecycleOwner) { characters ->
-            if(characters.isNotEmpty()) {
+            if (characters.isNotEmpty()) {
                 characters?.let { charactersListAdapter.submitList(characters) }
                 hideProgressBar()
             } else {
@@ -58,7 +62,7 @@ class CharactersListFragment : Fragment() {
 
         val toolbar = requireActivity().findViewById<View>(R.id.toolbar) as Toolbar
         (requireActivity() as MainActivity).setSupportActionBar(toolbar)
-        (this.activity as MainActivity).supportActionBar?.setTitle(R.string.character_list)
+
 
         (activity as MainActivity).hideUpButton()
 
@@ -72,7 +76,6 @@ class CharactersListFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        requireNotNull(activity).actionBar?.setTitle(R.string.character_list)
     }
 
     private fun onListItemClick(position: Int) {
