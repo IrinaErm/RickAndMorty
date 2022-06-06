@@ -24,10 +24,14 @@ class NetworkModule {
     @Provides
     fun provideRetrofit(moshi: Moshi): CharacterRetrofitApi {
         return Retrofit.Builder()
-            .baseUrl("https://rickandmortyapi.com/api/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
             .create(CharacterRetrofitApi::class.java)
+    }
+
+    private companion object {
+        const val BASE_URL = "https://rickandmortyapi.com/api/"
     }
 
 }
