@@ -13,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.FragmentCharactersListBinding
 import com.ermilova.android.characters_list.di.CharactersListComponentProvider
+import com.ermilova.android.core.utils.ApiStatus
 import com.ermilova.android.core.utils.ViewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,13 +50,17 @@ class CharactersListFragment : Fragment() {
         charactersListAdapter = CharactersListAdapter { position -> onListItemClick(position) }
         binding.charactersList.adapter = charactersListAdapter
 
-        charactersListViewModel.characters.observe(viewLifecycleOwner) { characters ->
-            if (characters.isNotEmpty()) {
-                characters?.let { charactersListAdapter.submitList(characters) }
-                hideProgressBar()
-            } else {
-                showErrorToast()
-                hideProgressBar()
+        charactersListViewModel.loadingStatus.observe(viewLifecycleOwner) { loadingStatus ->
+            when(loadingStatus) {
+                ApiStatus.DONE -> {
+                    charactersListAdapter.submitList(charactersListViewModel.characters.value)
+                    hideProgressBar()
+                }
+                ApiStatus.ERROR -> {
+                    showErrorToast()
+                    hideProgressBar()
+                }
+
             }
         }
 

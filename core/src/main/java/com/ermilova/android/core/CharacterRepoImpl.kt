@@ -3,7 +3,6 @@ package com.ermilova.android.core
 import com.ermilova.android.core.retrofit.CharacterNetworkDto
 import com.ermilova.android.core.retrofit.CharacterRemoteDataSource
 import com.ermilova.android.core.room.CharacterLocalDataSource
-import com.ermilova.android.core.Character
 import javax.inject.Inject
 
 class CharacterRepoImpl @Inject constructor(
@@ -12,14 +11,14 @@ class CharacterRepoImpl @Inject constructor(
 ) : CharacterRepo {
 
     override suspend fun getAllCharacters(): List<Character> {
-        return characterRemoteDataSource.getAllCharacters().results.map { characterDto ->
-            CharacterNetworkDto.mapToModel(characterDto).also { character ->
-                characterLocalDataSource.saveCharacter(character)
+        return characterRemoteDataSource.getAllCharacters().map { characterNetworkDto ->
+            CharacterNetworkDto.mapToModel(characterNetworkDto).also { character ->
+                cacheCharacter(character)
             }
         }
     }
 
-    override suspend fun addCharacter(character: Character) {
+    override suspend fun cacheCharacter(character: Character) {
         characterLocalDataSource.saveCharacter(character)
     }
 
