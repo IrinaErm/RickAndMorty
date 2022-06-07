@@ -60,7 +60,6 @@ class CharactersListFragment : Fragment() {
                     showErrorToast()
                     hideProgressBar()
                 }
-
             }
         }
 

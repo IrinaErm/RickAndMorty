@@ -2,18 +2,18 @@ package com.ermilova.android.characters_list.presentation
 
 import androidx.lifecycle.*
 import com.ermilova.android.characters_list.domain.GetAllCharactersUseCase
+import com.ermilova.android.core.domain.CharacterModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
-import com.ermilova.android.core.Character
 import com.ermilova.android.core.utils.ApiStatus
 
 class CharactersListViewModel @Inject constructor(
     private val getAllCharactersUseCase: GetAllCharactersUseCase
 ) : ViewModel() {
 
-    private var _characters = MutableLiveData<List<Character>>()
-    val characters: LiveData<List<Character>>
+    private var _characters = MutableLiveData<List<CharacterModel>>()
+    val characters: LiveData<List<CharacterModel>>
         get() = _characters
 
     private val _loadingStatus = MutableLiveData<ApiStatus>()

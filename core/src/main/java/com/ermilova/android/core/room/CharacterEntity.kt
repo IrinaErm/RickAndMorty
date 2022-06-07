@@ -1,11 +1,12 @@
-package com.ermilova.android.core
+package com.ermilova.android.core.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ermilova.android.core.domain.CharacterModel
 
 @Entity(tableName = "character_table")
-data class Character (
+data class CharacterEntity (
     @PrimaryKey
     @ColumnInfo(name = "character_id")
     val id: Long,
@@ -22,3 +23,15 @@ data class Character (
     @ColumnInfo(name = "character_image")
     val image: String?,
 )
+
+fun CharacterEntity.toDomainModel(): CharacterModel {
+    return CharacterModel(
+        id = id,
+        name = name,
+        status = status,
+        species = species,
+        gender = gender,
+        created = created,
+        image = image
+    )
+}

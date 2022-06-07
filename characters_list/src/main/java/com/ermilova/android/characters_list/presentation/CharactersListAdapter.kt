@@ -10,12 +10,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.CharactersListItemBinding
-import com.ermilova.android.core.Character
+import com.ermilova.android.core.domain.CharacterModel
 
 class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
-    ListAdapter<Character, CharactersListAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
+    ListAdapter<CharacterModel, CharactersListAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
 
-    private var unfilteredList = mutableListOf<Character>()
+    private var unfilteredList = mutableListOf<CharacterModel>()
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val item = getItem(position)
@@ -33,7 +33,7 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
             itemView.setOnClickListener(this)
         }
 
-        fun bind(item: Character) {
+        fun bind(item: CharacterModel) {
             binding.characterName.text = item.name
 
             item.image?.let {
@@ -74,7 +74,7 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
         }
     }
 
-    override fun submitList(list: List<Character>?) {
+    override fun submitList(list: List<CharacterModel>?) {
         if (unfilteredList.isEmpty()) {
             list?.let { characters ->
                 unfilteredList.addAll(characters)
@@ -84,12 +84,12 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
     }
 }
 
-class CharacterDiffCallback : DiffUtil.ItemCallback<Character>() {
-    override fun areItemsTheSame(oldItem: Character, newItem: Character): Boolean {
+class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterModel>() {
+    override fun areItemsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: Character, newItem: Character): Boolean {
+    override fun areContentsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean {
         return oldItem == newItem
     }
 }

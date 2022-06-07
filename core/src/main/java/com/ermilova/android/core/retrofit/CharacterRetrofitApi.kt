@@ -4,5 +4,5 @@ import retrofit2.http.GET
 
 interface CharacterRetrofitApi {
     @GET("character")
-    suspend fun getCharactersList():CharactersList
+    suspend fun getCharacters(): CharacterNetworkDtoContainer
 }
