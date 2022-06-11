@@ -1,7 +1,7 @@
 package com.ermilova.android.core.di
 
 import com.ermilova.android.core.domain.CharacterRepo
-import com.ermilova.android.core.CharacterRepoImpl
+import com.ermilova.android.core.data.CharacterRepoImpl
 import dagger.Binds
 import dagger.Module
 

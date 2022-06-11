@@ -1,9 +1,9 @@
-package com.ermilova.android.core.room
+package com.ermilova.android.core.data.room
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.ermilova.android.core.domain.CharacterModel
+import com.ermilova.android.core.domain.model.CharacterDomainModel
 
 @Entity(tableName = "character_table")
 data class CharacterEntity (
@@ -24,8 +24,8 @@ data class CharacterEntity (
     val image: String?,
 )
 
-fun CharacterEntity.toDomainModel(): CharacterModel {
-    return CharacterModel(
+fun CharacterEntity.toDomainModel(): CharacterDomainModel {
+    return CharacterDomainModel(
         id = id,
         name = name,
         status = status,

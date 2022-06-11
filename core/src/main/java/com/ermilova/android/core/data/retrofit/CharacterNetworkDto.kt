@@ -1,4 +1,4 @@
-package com.ermilova.android.core.retrofit
+package com.ermilova.android.core.data.retrofit
 
 import com.squareup.moshi.Json
 

@@ -1,6 +1,6 @@
 package com.ermilova.android.core.di
 
-import com.ermilova.android.core.retrofit.CharacterRetrofitApi
+import com.ermilova.android.core.data.retrofit.CharacterRetrofitApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

@@ -1,9 +1,9 @@
-package com.ermilova.android.core.retrofit
+package com.ermilova.android.core.data.retrofit
 
 import android.content.res.Resources
-import com.ermilova.android.core.domain.CharacterModel
+import com.ermilova.android.core.domain.model.CharacterDomainModel
 import com.ermilova.android.core.R
-import com.ermilova.android.core.room.CharacterEntity
+import com.ermilova.android.core.data.room.CharacterEntity
 import com.ermilova.android.core.utils.parseCharacterCreated
 import com.squareup.moshi.Json
 
@@ -12,9 +12,9 @@ data class CharacterNetworkDtoContainer(
     val results: List<CharacterNetworkDto>
 )
 
-fun CharacterNetworkDtoContainer.toDomainModel(): List<CharacterModel> {
+fun CharacterNetworkDtoContainer.toDomainModel(): List<CharacterDomainModel> {
     return results.map { characterNetworkDto ->
-        CharacterModel(
+        CharacterDomainModel(
             id = characterNetworkDto.id,
             name = characterNetworkDto.name ?: Resources.getSystem().getString(R.string.no_info),
             status = characterNetworkDto.status ?: Resources.getSystem().getString(R.string.no_info),

@@ -1,4 +1,4 @@
-package com.ermilova.android.core.room
+package com.ermilova.android.core.data.room
 
 import android.content.Context
 import androidx.room.Database

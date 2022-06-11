@@ -1,6 +1,6 @@
-package com.ermilova.android.core.domain
+package com.ermilova.android.core.domain.model
 
-data class CharacterModel(
+data class CharacterDomainModel(
     val id: Long,
     val name: String,
     val status: String,

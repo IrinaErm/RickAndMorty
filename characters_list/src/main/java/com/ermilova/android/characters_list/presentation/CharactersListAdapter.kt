@@ -10,20 +10,20 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.CharactersListItemBinding
-import com.ermilova.android.core.domain.CharacterModel
+import com.ermilova.android.core.domain.model.CharacterDomainModel
 
 class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
-    ListAdapter<CharacterModel, CharactersListAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
+    ListAdapter<CharacterDomainModel, CharactersListAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
 
-    private var unfilteredList = mutableListOf<CharacterModel>()
+    private var unfilteredList = mutableListOf<CharacterDomainModel>()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
+        return CharacterViewHolder.from(parent, onItemClick)
+    }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
-        return CharacterViewHolder.from(parent, onItemClick)
     }
 
     class CharacterViewHolder private constructor(private val binding: CharactersListItemBinding, private val onItemClick: (position: Int) -> Unit) :
@@ -33,7 +33,7 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
             itemView.setOnClickListener(this)
         }
 
-        fun bind(item: CharacterModel) {
+        fun bind(item: CharacterDomainModel) {
             binding.characterName.text = item.name
 
             item.image?.let {
@@ -74,7 +74,7 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
         }
     }
 
-    override fun submitList(list: List<CharacterModel>?) {
+    override fun submitList(list: List<CharacterDomainModel>?) {
         if (unfilteredList.isEmpty()) {
             list?.let { characters ->
                 unfilteredList.addAll(characters)
@@ -84,12 +84,12 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
     }
 }
 
-class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterModel>() {
-    override fun areItemsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean {
+class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterDomainModel>() {
+    override fun areItemsTheSame(oldItem: CharacterDomainModel, newItem: CharacterDomainModel): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: CharacterModel, newItem: CharacterModel): Boolean {
+    override fun areContentsTheSame(oldItem: CharacterDomainModel, newItem: CharacterDomainModel): Boolean {
         return oldItem == newItem
     }
 }

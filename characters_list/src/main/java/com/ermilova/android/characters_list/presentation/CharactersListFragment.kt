@@ -5,18 +5,23 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.FragmentCharactersListBinding
 import com.ermilova.android.characters_list.di.CharactersListComponentProvider
+import com.ermilova.android.core.domain.model.CharacterDomainModel
 import com.ermilova.android.core.utils.ApiStatus
 import com.ermilova.android.core.utils.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,16 +55,9 @@ class CharactersListFragment : Fragment() {
         charactersListAdapter = CharactersListAdapter { position -> onListItemClick(position) }
         binding.charactersList.adapter = charactersListAdapter
 
-        charactersListViewModel.loadingStatus.observe(viewLifecycleOwner) { loadingStatus ->
-            when(loadingStatus) {
-                ApiStatus.DONE -> {
-                    charactersListAdapter.submitList(charactersListViewModel.characters.value)
-                    hideProgressBar()
-                }
-                ApiStatus.ERROR -> {
-                    showErrorToast()
-                    hideProgressBar()
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                showCharactersList()
             }
         }
 
@@ -72,8 +70,26 @@ class CharactersListFragment : Fragment() {
             .inject(this)
     }
 
+    private suspend fun showCharactersList() {
+            charactersListViewModel.characters.collect { apiStatus ->
+                when (apiStatus) {
+                    is ApiStatus.Loaded -> {
+                        charactersListAdapter.submitList(apiStatus.list as List<CharacterDomainModel>)
+                        hideProgressBar()
+                    }
+                    is ApiStatus.Error -> {
+                        showErrorToast(binding.root)
+                        hideProgressBar()
+                    } else -> {
+
+                    }
+                }
+            }
+    }
+
     private fun onListItemClick(position: Int) {
-        val uri = Uri.parse("App://characterDetailsFragment/${charactersListAdapter.currentList[position].id}")
+        val uri =
+            Uri.parse("App://characterDetailsFragment/${charactersListAdapter.currentList[position].id}")
         findNavController(this).navigate(uri)
     }
 
@@ -114,8 +130,12 @@ class CharactersListFragment : Fragment() {
         binding.charactersList.visibility = View.VISIBLE
     }
 
-    private fun showErrorToast() {
-        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+    private fun showErrorToast(view: View) {
+        Snackbar.make(
+            view,
+            getString(com.ermilova.android.core.R.string.error_message),
+            SHOW_TOAST_DURATION
+        ).show()
     }
 
     override fun onDetach() {
@@ -125,5 +145,6 @@ class CharactersListFragment : Fragment() {
 
     private companion object {
         const val SEARCH_QUERY_DELAY = 500L
+        const val SHOW_TOAST_DURATION = 3000
     }
 }

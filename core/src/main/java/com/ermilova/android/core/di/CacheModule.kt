@@ -1,8 +1,8 @@
 package com.ermilova.android.core.di
 
 import android.app.Application
-import com.ermilova.android.core.room.AppDatabase
-import com.ermilova.android.core.room.CharacterDao
+import com.ermilova.android.core.data.room.AppDatabase
+import com.ermilova.android.core.data.room.CharacterDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

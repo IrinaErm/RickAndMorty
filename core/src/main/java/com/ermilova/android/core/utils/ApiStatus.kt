@@ -1,5 +1,7 @@
 package com.ermilova.android.core.utils
 
-enum class ApiStatus {
-    LOADING, ERROR, DONE
+sealed class ApiStatus {
+    object Loading: ApiStatus()
+    class Loaded(val list: List<Any>): ApiStatus()
+    class Error(val throwable: Throwable): ApiStatus()
 }

@@ -4,12 +4,12 @@ import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun parseCharacterCreated(created: String?): String? {
+fun parseCharacterCreated(createdDate: String?): String? {
     val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
     val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     var date: String? = null
     try {
-        date = created?.let { created ->
+        date = createdDate?.let { created ->
             simpleDateFormat.parse(created)?.let { createdDate ->
                 formatter.format(createdDate)
             }

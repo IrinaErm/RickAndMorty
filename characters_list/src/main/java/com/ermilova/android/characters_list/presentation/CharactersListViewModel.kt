@@ -1,43 +1,25 @@
 package com.ermilova.android.characters_list.presentation
 
 import androidx.lifecycle.*
-import com.ermilova.android.characters_list.domain.GetAllCharactersUseCase
-import com.ermilova.android.core.domain.CharacterModel
-import kotlinx.coroutines.launch
-import java.lang.Exception
+import com.ermilova.android.core.domain.usecase.GetAllCharactersUseCase
 import javax.inject.Inject
 import com.ermilova.android.core.utils.ApiStatus
+import kotlinx.coroutines.flow.*
+import java.lang.Exception
 
 class CharactersListViewModel @Inject constructor(
     private val getAllCharactersUseCase: GetAllCharactersUseCase
 ) : ViewModel() {
 
-    private var _characters = MutableLiveData<List<CharacterModel>>()
-    val characters: LiveData<List<CharacterModel>>
-        get() = _characters
-
-    private val _loadingStatus = MutableLiveData<ApiStatus>()
-    val loadingStatus: LiveData<ApiStatus>
-        get() = _loadingStatus
-
-    init {
-        getCharacters()
-    }
-
-    private fun getCharacters() {
-        viewModelScope.launch {
-            try {
-                _loadingStatus.value = ApiStatus.LOADING
-
-                getAllCharactersUseCase().let { charactersList ->
-                    _characters.value = charactersList
-                }
-
-                _loadingStatus.value = ApiStatus.DONE
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _loadingStatus.value = ApiStatus.ERROR
-            }
+    val characters: StateFlow<ApiStatus> = flow {
+        try {
+            emit(ApiStatus.Loaded(getAllCharactersUseCase()))
+        } catch(e: Exception) {
+            emit(ApiStatus.Error(e))
         }
-    }
+    }.stateIn(
+        initialValue = ApiStatus.Loading,
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000)
+    )
 }

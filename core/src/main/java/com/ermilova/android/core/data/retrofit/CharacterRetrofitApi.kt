@@ -1,4 +1,4 @@
-package com.ermilova.android.core.retrofit
+package com.ermilova.android.core.data.retrofit
 
 import retrofit2.http.GET
 
