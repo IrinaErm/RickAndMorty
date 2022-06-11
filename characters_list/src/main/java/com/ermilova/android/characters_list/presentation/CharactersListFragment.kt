@@ -15,7 +15,6 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.FragmentCharactersListBinding
 import com.ermilova.android.characters_list.di.CharactersListComponentProvider
-import com.ermilova.android.core.domain.model.CharacterDomainModel
 import com.ermilova.android.core.utils.ApiStatus
 import com.ermilova.android.core.utils.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar
@@ -74,7 +73,7 @@ class CharactersListFragment : Fragment() {
             charactersListViewModel.characters.collect { apiStatus ->
                 when (apiStatus) {
                     is ApiStatus.Loaded -> {
-                        charactersListAdapter.submitList(apiStatus.list as List<CharacterDomainModel>)
+                        charactersListAdapter.submitList(apiStatus.list)
                         hideProgressBar()
                     }
                     is ApiStatus.Error -> {
