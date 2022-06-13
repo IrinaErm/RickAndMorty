@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,16 +13,14 @@ import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.paging.LoadState
 import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.FragmentCharactersListBinding
 import com.ermilova.android.characters_list.di.CharactersListComponentProvider
-import com.ermilova.android.core.utils.ApiStatus
 import com.ermilova.android.core.utils.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 
@@ -54,9 +53,25 @@ class CharactersListFragment : Fragment() {
         charactersListAdapter = CharactersListAdapter { position -> onListItemClick(position) }
         binding.charactersList.adapter = charactersListAdapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                showCharactersList()
+                charactersListViewModel.characters.collectLatest {
+                    charactersListAdapter.submitData(it)
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            charactersListAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.progressBar.isVisible = loadStates.refresh is LoadState.Loading
+                binding.charactersList.isVisible = loadStates.refresh !is LoadState.Loading
+
+                binding.prependProgress.isVisible = loadStates.prepend is LoadState.Loading
+                binding.appendProgress.isVisible = loadStates.append is LoadState.Loading
+
+                if (loadStates.refresh is LoadState.Error) {
+                    showErrorToast(binding.root)
+                }
             }
         }
 
@@ -69,26 +84,14 @@ class CharactersListFragment : Fragment() {
             .inject(this)
     }
 
-    private suspend fun showCharactersList() {
-            charactersListViewModel.characters.collect { apiStatus ->
-                when (apiStatus) {
-                    is ApiStatus.Loaded -> {
-                        charactersListAdapter.submitList(apiStatus.list)
-                        hideProgressBar()
-                    }
-                    is ApiStatus.Error -> {
-                        showErrorToast(binding.root)
-                        hideProgressBar()
-                    } else -> {
-
-                    }
-                }
-            }
+    override fun onDetach() {
+        searchJob?.cancel()
+        super.onDetach()
     }
 
-    private fun onListItemClick(position: Int) {
+    private fun onListItemClick(characterId: Long) {
         val uri =
-            Uri.parse("App://characterDetailsFragment/${charactersListAdapter.currentList[position].id}")
+            Uri.parse("App://characterDetailsFragment/${characterId}")
         findNavController(this).navigate(uri)
     }
 
@@ -119,14 +122,8 @@ class CharactersListFragment : Fragment() {
         searchJob?.cancel()
         searchJob = lifecycle.coroutineScope.launch {
             delay(delay)
-            charactersListAdapter.filter(query)
+            //charactersListAdapter.filter(query)
         }
-    }
-
-
-    private fun hideProgressBar() {
-        binding.progressBar.visibility = View.GONE
-        binding.charactersList.visibility = View.VISIBLE
     }
 
     private fun showErrorToast(view: View) {
@@ -135,11 +132,6 @@ class CharactersListFragment : Fragment() {
             getString(com.ermilova.android.core.R.string.error_message),
             SHOW_TOAST_DURATION
         ).show()
-    }
-
-    override fun onDetach() {
-        searchJob?.cancel()
-        super.onDetach()
     }
 
     private companion object {

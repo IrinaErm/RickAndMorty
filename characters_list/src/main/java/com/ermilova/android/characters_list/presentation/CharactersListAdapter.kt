@@ -3,8 +3,8 @@ package com.ermilova.android.characters_list.presentation
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -12,10 +12,10 @@ import com.ermilova.android.characters_list.R
 import com.ermilova.android.characters_list.databinding.CharactersListItemBinding
 import com.ermilova.android.core.domain.model.CharacterDomainModel
 
-class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
-    ListAdapter<CharacterDomainModel, CharactersListAdapter.CharacterViewHolder>(CharacterDiffCallback()) {
-
-    private var unfilteredList = mutableListOf<CharacterDomainModel>()
+class CharactersListAdapter(private val onItemClick: (characterId: Long) -> Unit) :
+    PagingDataAdapter<CharacterDomainModel, CharactersListAdapter.CharacterViewHolder>(
+        CharacterDiffCallback()
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterViewHolder {
         return CharacterViewHolder.from(parent, onItemClick)
@@ -23,18 +23,24 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        item?.let { holder.bind(item) }
     }
 
-    class CharacterViewHolder private constructor(private val binding: CharactersListItemBinding, private val onItemClick: (position: Int) -> Unit) :
+    class CharacterViewHolder private constructor(
+        private val binding: CharactersListItemBinding,
+        private val onItemClick: (characterId: Long) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         init {
             itemView.setOnClickListener(this)
         }
 
+        var characterId = 1L
+
         fun bind(item: CharacterDomainModel) {
             binding.characterName.text = item.name
+            characterId = item.id
 
             item.image?.let {
                 Glide.with(binding.characterImg.context)
@@ -49,47 +55,32 @@ class CharactersListAdapter(private val onItemClick: (position: Int) -> Unit) :
         }
 
         override fun onClick(view: View?) {
-            onItemClick(adapterPosition)
+            onItemClick(characterId)
         }
 
         companion object {
-            fun from(parent: ViewGroup, onItemClick: (position: Int) -> Unit): CharacterViewHolder {
+            fun from(parent: ViewGroup, onItemClick: (characterId: Long) -> Unit): CharacterViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                //val view = layoutInflater.inflate(R.layout.characters_list_item, parent, false)
                 val binding = CharactersListItemBinding.inflate(layoutInflater, parent, false)
                 return CharacterViewHolder(binding, onItemClick)
             }
         }
     }
 
-    fun filter(query: CharSequence?) {
-        if (!query.isNullOrEmpty()) {
-            submitList(
-                unfilteredList.filter { character ->
-                    character.name.contains(query, ignoreCase = true)
-                }
-            )
-        } else {
-            submitList(unfilteredList)
-        }
-    }
-
-    override fun submitList(list: List<CharacterDomainModel>?) {
-        if (unfilteredList.isEmpty()) {
-            list?.let { characters ->
-                unfilteredList.addAll(characters)
-            }
-        }
-        super.submitList(list)
-    }
 }
 
 class CharacterDiffCallback : DiffUtil.ItemCallback<CharacterDomainModel>() {
-    override fun areItemsTheSame(oldItem: CharacterDomainModel, newItem: CharacterDomainModel): Boolean {
+    override fun areItemsTheSame(
+        oldItem: CharacterDomainModel,
+        newItem: CharacterDomainModel
+    ): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: CharacterDomainModel, newItem: CharacterDomainModel): Boolean {
+    override fun areContentsTheSame(
+        oldItem: CharacterDomainModel,
+        newItem: CharacterDomainModel
+    ): Boolean {
         return oldItem == newItem
     }
 }

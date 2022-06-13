@@ -16,6 +16,7 @@ import com.ermilova.android.character_details.di.CharacterDetailsComponentProvid
 import com.ermilova.android.core.utils.ViewModelFactory
 import javax.inject.Inject
 
+
 class CharacterDetailsFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<CharacterDetailsViewModel>
